@@ -13,9 +13,11 @@
   --purple:#b347ff;--text:#e0e8f0;--text-dim:#6b7a8f;--text-dark:#3a4a5f;
 }
 * {margin:0;padding:0;box-sizing:border-box}
+html {overflow-x:auto}
 body {
   font-family:'JetBrains Mono',monospace;
-  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:auto;overflow-y:auto;
 }
 body::before {
   content:'';position:fixed;top:0;left:0;right:0;bottom:0;
@@ -27,7 +29,7 @@ body::after {
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);
   pointer-events:none;z-index:10000;opacity:0.3;
 }
-.main-container {position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:20px}
+.main-container {position:relative;z-index:1;max-width:100%;margin:0 auto;padding:20px;min-width:1400px}
 .header {text-align:center;padding:30px 20px;border-bottom:1px solid var(--border);margin-bottom:30px;position:relative}
 .header::before {
   content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
@@ -69,77 +71,110 @@ body::after {
 .sim-log .log-entry.highlight {color:var(--green)}
 .sim-log .log-entry.winner {color:var(--yellow);font-weight:700}
 .sim-log .log-entry.goal {color:var(--text)}
-.bracket-wrapper {display:flex;justify-content:center;gap:0;overflow-x:auto;padding-bottom:20px}
-.bracket-column {display:flex;flex-direction:column;justify-content:space-around;min-width:220px;padding:0 10px}
-.bracket-column-title {text-align:center;font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:600;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;padding:8px;border:1px solid var(--border);background:rgba(0,212,255,0.05)}
-.match-card {background:var(--bg-card);border:1px solid var(--border);margin-bottom:15px;transition:all 0.3s ease;position:relative}
+
+/* BRACKET - CORRECAO PRINCIPAL */
+.bracket-outer {width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:10px}
+.bracket-outer::-webkit-scrollbar {height:8px}
+.bracket-outer::-webkit-scrollbar-track {background:var(--bg)}
+.bracket-outer::-webkit-scrollbar-thumb {background:var(--border);border-radius:4px}
+.bracket-outer::-webkit-scrollbar-thumb:hover {background:var(--cyan)}
+.bracket-wrapper {display:flex;justify-content:center;gap:0;min-width:1600px;padding:0 20px 20px}
+.bracket-column {display:flex;flex-direction:column;justify-content:space-around;min-width:200px;max-width:220px;padding:0 8px;flex-shrink:0}
+.bracket-column-title {text-align:center;font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:600;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;padding:8px;border:1px solid var(--border);background:rgba(0,212,255,0.05);white-space:nowrap}
+.match-card {background:var(--bg-card);border:1px solid var(--border);margin-bottom:12px;transition:all 0.3s ease;position:relative;min-width:190px}
 .match-card:hover {border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,0.3),0 0 40px rgba(0,212,255,0.1)}
 .match-card.simulated {border-color:var(--green);box-shadow:0 0 20px rgba(0,255,136,0.3),0 0 40px rgba(0,255,136,0.1)}
-.match-number {font-size:0.6rem;color:var(--text-dark);padding:4px 8px;border-bottom:1px solid var(--border);letter-spacing:1px}
-.team-row {display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(26,42,74,0.5);cursor:pointer;transition:background 0.2s ease}
+.match-number {font-size:0.6rem;color:var(--text-dark);padding:4px 8px;border-bottom:1px solid var(--border);letter-spacing:1px;white-space:nowrap}
+.team-row {display:flex;align-items:center;padding:7px 10px;border-bottom:1px solid rgba(26,42,74,0.5);cursor:pointer;transition:background 0.2s ease}
 .team-row:last-child {border-bottom:none}
 .team-row:hover {background:var(--bg-card-hover)}
 .team-row.winner {background:rgba(0,255,136,0.05)}
-.team-flag {width:24px;height:16px;margin-right:10px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,0.1)}
-.team-name {flex:1;font-size:0.78rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.team-score {font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;min-width:28px;text-align:center;color:var(--text-dim)}
+.team-flag {width:22px;height:15px;margin-right:8px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+.team-name {flex:1;font-size:0.75rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.team-score {font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;min-width:24px;text-align:center;color:var(--text-dim);flex-shrink:0}
 .team-row.winner .team-score {color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.3),0 0 40px rgba(0,255,136,0.1)}
 .team-row.loser .team-score {color:var(--text-dark)}
-.match-date {font-size:0.6rem;color:var(--text-dark);padding:4px 8px;text-align:center;border-top:1px solid var(--border);letter-spacing:1px}
-.match-goals {font-size:0.6rem;color:var(--text-dark);padding:2px 8px;text-align:center;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease}
-.match-card:hover .match-goals,.match-card.simulated .match-goals {max-height:100px;padding:4px 8px}
-.goal-scorer {display:inline-block;margin:1px 4px;color:var(--yellow-dim)}
-.connector-container {display:flex;flex-direction:column;justify-content:space-around;width:30px;position:relative}
+.match-date {font-size:0.58rem;color:var(--text-dark);padding:3px 8px;text-align:center;border-top:1px solid var(--border);letter-spacing:1px;white-space:nowrap}
+.match-goals {font-size:0.58rem;color:var(--text-dark);padding:2px 8px;text-align:center;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease}
+.match-card:hover .match-goals,.match-card.simulated .match-goals {max-height:80px;padding:3px 8px}
+.goal-scorer {display:inline-block;margin:1px 3px;color:var(--yellow-dim);font-size:0.55rem}
+
+/* CONNECTORS */
+.connector-container {display:flex;flex-direction:column;justify-content:space-around;width:24px;position:relative;flex-shrink:0}
 .connector {height:2px;background:var(--border);position:relative}
-.connector::after {content:'';position:absolute;right:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--border)}
+.connector::after {content:'';position:absolute;right:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--border)}
 .connector.active {background:var(--green);box-shadow:0 0 20px rgba(0,255,136,0.3),0 0 40px rgba(0,255,136,0.1)}
 .connector.active::after {background:var(--green);box-shadow:0 0 20px rgba(0,255,136,0.3),0 0 40px rgba(0,255,136,0.1)}
-.final-center {display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:200px;padding:0 15px}
-.trophy-icon {font-size:3rem;margin-bottom:15px;color:var(--yellow);text-shadow:0 0 30px rgba(255,204,0,0.4);animation:pulse 2s ease-in-out infinite}
+
+/* FINAL CENTER */
+.final-center {display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:180px;max-width:200px;padding:0 12px;flex-shrink:0}
+.trophy-icon {font-size:2.5rem;margin-bottom:12px;color:var(--yellow);text-shadow:0 0 30px rgba(255,204,0,0.4);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse {0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.final-label {font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--yellow);letter-spacing:4px;margin-bottom:15px;text-shadow:0 0 10px rgba(255,204,0,0.3)}
+.final-label {font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--yellow);letter-spacing:3px;margin-bottom:12px;text-shadow:0 0 10px rgba(255,204,0,0.3);white-space:nowrap}
 .final-match {width:100%}
-.champion-display {display:none;text-align:center;padding:30px;border:2px solid var(--yellow);background:rgba(255,204,0,0.05);margin-top:20px;animation:championGlow 2s ease-in-out infinite alternate}
+
+/* CHAMPION */
+.champion-display {display:none;text-align:center;padding:25px;border:2px solid var(--yellow);background:rgba(255,204,0,0.05);margin:20px auto;max-width:600px;animation:championGlow 2s ease-in-out infinite alternate}
 .champion-display.active {display:block}
 @keyframes championGlow {from{box-shadow:0 0 20px rgba(255,204,0,0.1)}to{box-shadow:0 0 40px rgba(255,204,0,0.3)}}
-.champion-display .champion-title {font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--yellow);letter-spacing:4px;margin-bottom:15px}
-.champion-display .champion-flag {width:80px;height:50px;border-radius:4px;margin-bottom:10px;border:2px solid var(--yellow);box-shadow:0 0 20px rgba(255,204,0,0.3)}
-.champion-display .champion-name {font-size:1.3rem;font-weight:700;color:var(--yellow);margin-bottom:5px}
-.champion-display .champion-stats {font-size:0.75rem;color:var(--text-dim)}
+.champion-display .champion-title {font-family:'Orbitron',sans-serif;font-size:1.3rem;color:var(--yellow);letter-spacing:3px;margin-bottom:12px}
+.champion-display .champion-flag {width:70px;height:45px;border-radius:4px;margin-bottom:8px;border:2px solid var(--yellow);box-shadow:0 0 20px rgba(255,204,0,0.3)}
+.champion-display .champion-name {font-size:1.2rem;font-weight:700;color:var(--yellow);margin-bottom:5px}
+.champion-display .champion-stats {font-size:0.72rem;color:var(--text-dim)}
+
+/* STATS */
 .stats-panel {display:none;max-width:900px;margin:30px auto;border:1px solid var(--border);background:var(--bg-card)}
 .stats-panel.active {display:block}
 .stats-header {padding:15px 20px;background:rgba(0,212,255,0.05);border-bottom:1px solid var(--border);font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--cyan);letter-spacing:3px;text-transform:uppercase}
-.stats-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--border)}
-.stat-item {background:var(--bg-card);padding:15px 20px}
-.stat-label {font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px}
-.stat-value {font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--cyan)}
+.stats-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border)}
+.stat-item {background:var(--bg-card);padding:12px 15px}
+.stat-label {font-size:0.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px}
+.stat-value {font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--cyan)}
 .stat-value.green {color:var(--green)}
 .stat-value.yellow {color:var(--yellow)}
 .stat-value.red {color:var(--red)}
+
+/* LOADING */
 .loading-overlay {display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,14,26,0.95);z-index:9999;justify-content:center;align-items:center;flex-direction:column}
 .loading-overlay.active {display:flex}
 .loading-text {font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--cyan);letter-spacing:4px;margin-bottom:20px}
 .loading-bar {width:300px;height:3px;background:var(--border);position:relative;overflow:hidden}
 .loading-bar::after {content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);animation:loadingSlide 1.5s ease-in-out infinite}
 @keyframes loadingSlide {0%{left:-100%}100%{left:100%}}
-.team-tooltip {position:fixed;background:var(--bg-card);border:1px solid var(--cyan);padding:15px;max-width:280px;z-index:1000;display:none;font-size:0.75rem;line-height:1.6;box-shadow:0 0 20px rgba(0,212,255,0.3),0 0 40px rgba(0,212,255,0.1)}
+
+/* TOOLTIP */
+.team-tooltip {position:fixed;background:var(--bg-card);border:1px solid var(--cyan);padding:12px;max-width:260px;z-index:1000;display:none;font-size:0.72rem;line-height:1.6;box-shadow:0 0 20px rgba(0,212,255,0.3),0 0 40px rgba(0,212,255,0.1)}
 .team-tooltip.active {display:block}
-.tooltip-title {font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--cyan);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.tooltip-stat {display:flex;justify-content:space-between;margin-bottom:3px}
+.tooltip-title {font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--cyan);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.tooltip-stat {display:flex;justify-content:space-between;margin-bottom:2px}
 .tooltip-stat-label {color:var(--text-dim)}
 .tooltip-stat-value {color:var(--text);font-weight:600}
-.tooltip-players {margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.tooltip-players-title {color:var(--green);margin-bottom:4px}
-@media (max-width:1200px) {.bracket-wrapper{flex-direction:column;align-items:center}.bracket-column{min-width:300px}.connector-container{display:none}}
-@media (max-width:600px) {.header h1{font-size:1.8rem;letter-spacing:4px}.bracket-column{min-width:100%;padding:0 5px}.controls{flex-direction:column;align-items:center}.btn{width:250px}}
-::-webkit-scrollbar {width:6px}
+.tooltip-players {margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+.tooltip-players-title {color:var(--green);margin-bottom:3px;font-size:0.7rem}
+
+/* RESPONSIVE */
+@media (max-width:1400px) {
+  .main-container {padding:10px;min-width:auto}
+  .bracket-wrapper {min-width:1400px}
+}
+@media (max-width:768px) {
+  .header h1 {font-size:1.6rem;letter-spacing:3px}
+  .bracket-wrapper {min-width:1200px}
+  .bracket-column {min-width:160px;max-width:180px;padding:0 4px}
+  .match-card {min-width:150px}
+  .team-name {font-size:0.68rem}
+  .connector-container {width:16px}
+  .final-center {min-width:150px;max-width:170px;padding:0 8px}
+  .controls {flex-direction:column;align-items:center}
+  .btn {width:220px}
+}
+
+::-webkit-scrollbar {width:6px;height:6px}
 ::-webkit-scrollbar-track {background:var(--bg)}
 ::-webkit-scrollbar-thumb {background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover {background:var(--cyan)}
 .fade-in {animation:fadeIn 0.5s ease forwards}
 @keyframes fadeIn {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.score-pop {animation:scorePop 0.3s ease}
-@keyframes scorePop {0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -173,26 +208,28 @@ body::after {
     <div class="champion-name" id="championName"></div>
     <div class="champion-stats" id="championStats"></div>
   </div>
-  <div class="bracket-wrapper" id="bracketWrapper">
-    <div class="bracket-column" id="colLeft16"><div class="bracket-column-title">32 AVOS</div></div>
-    <div class="connector-container" id="connLeft16"></div>
-    <div class="bracket-column" id="colLeft8"><div class="bracket-column-title">OITAVAS</div></div>
-    <div class="connector-container" id="connLeft8"></div>
-    <div class="bracket-column" id="colLeft4"><div class="bracket-column-title">QUARTAS</div></div>
-    <div class="connector-container" id="connLeft4"></div>
-    <div class="bracket-column" id="colLeft2"><div class="bracket-column-title">SEMIFINAL</div></div>
-    <div class="final-center" id="finalCenter">
-      <div class="trophy-icon">&#127942;</div>
-      <div class="final-label">FINAL</div>
-      <div class="final-match" id="finalMatch"></div>
+  <div class="bracket-outer">
+    <div class="bracket-wrapper" id="bracketWrapper">
+      <div class="bracket-column" id="colLeft16"><div class="bracket-column-title">32 AVOS</div></div>
+      <div class="connector-container" id="connLeft16"></div>
+      <div class="bracket-column" id="colLeft8"><div class="bracket-column-title">OITAVAS</div></div>
+      <div class="connector-container" id="connLeft8"></div>
+      <div class="bracket-column" id="colLeft4"><div class="bracket-column-title">QUARTAS</div></div>
+      <div class="connector-container" id="connLeft4"></div>
+      <div class="bracket-column" id="colLeft2"><div class="bracket-column-title">SEMIFINAL</div></div>
+      <div class="final-center" id="finalCenter">
+        <div class="trophy-icon">&#127942;</div>
+        <div class="final-label">FINAL</div>
+        <div class="final-match" id="finalMatch"></div>
+      </div>
+      <div class="bracket-column" id="colRight2"><div class="bracket-column-title">SEMIFINAL</div></div>
+      <div class="connector-container" id="connRight4"></div>
+      <div class="bracket-column" id="colRight4"><div class="bracket-column-title">QUARTAS</div></div>
+      <div class="connector-container" id="connRight8"></div>
+      <div class="bracket-column" id="colRight8"><div class="bracket-column-title">OITAVAS</div></div>
+      <div class="connector-container" id="connRight16"></div>
+      <div class="bracket-column" id="colRight16"><div class="bracket-column-title">32 AVOS</div></div>
     </div>
-    <div class="bracket-column" id="colRight2"><div class="bracket-column-title">SEMIFINAL</div></div>
-    <div class="connector-container" id="connRight4"></div>
-    <div class="bracket-column" id="colRight4"><div class="bracket-column-title">QUARTAS</div></div>
-    <div class="connector-container" id="connRight8"></div>
-    <div class="bracket-column" id="colRight8"><div class="bracket-column-title">OITAVAS</div></div>
-    <div class="connector-container" id="connRight16"></div>
-    <div class="bracket-column" id="colRight16"><div class="bracket-column-title">32 AVOS</div></div>
   </div>
 </div>
 <script>
@@ -234,59 +271,7 @@ const TEAMS_DATA={
 "Gana":{code:"GH",flag:"https://flagcdn.com/w80/gh.png",ranking:68,odds:250.0,titles:0,lastWC:{year:2022,result:"Fase de Grupos"},lastCAN:{year:2023,result:"Fase de Grupos"},squadStrength:67,attack:68,defense:66,midfield:66,starPlayers:["Mohammed Kudus","Thomas Partey","Jordan Ayew"],youngStars:["Ernest Nuamah"],goalsInWC:3,conceded:6,form:["D","V","E","D","D"],groupPosition:3,group:"K",keyStats:{possession:42,shots:8.5,passAcc:71}}
 };
 
-const TOP_SCORERS={
-"Messi":{team:"Argentina",goals:6,position:"ATA"},"Mbappe":{team:"Franca",goals:4,position:"ATA"},
-"Haaland":{team:"Noruega",goals:4,position:"ATA"},"Vini Jr":{team:"Brasil",goals:3,position:"ATA"},
-"Musiala":{team:"Alemanha",goals:3,position:"MEI"},"Cunha":{team:"Brasil",goals:3,position:"ATA"},
-"Kane":{team:"Inglaterra",goals:2,position:"ATA"},"Havertz":{team:"Alemanha",goals:2,position:"ATA"},
-"Oyarzabal":{team:"Espanha",goals:2,position:"ATA"},"Ronaldo":{team:"Portugal",goals:2,position:"ATA"},
-"Gakpo":{team:"Holanda",goals:2,position:"ATA"},"Isak":{team:"Suecia",goals:2,position:"ATA"},
-"David":{team:"Canada",goals:2,position:"ATA"},"Lautaro":{team:"Argentina",goals:2,position:"ATA"},
-"Sarr":{team:"Senegal",goals:2,position:"ATA"},"Dembele":{team:"Franca",goals:4,position:"ATA"},
-"Yamal":{team:"Espanha",goals:1,position:"ATA"},"Pedri":{team:"Espanha",goals:1,position:"MEI"},
-"Bellingham":{team:"Inglaterra",goals:1,position:"MEI"},"Saka":{team:"Inglaterra",goals:1,position:"ATA"},
-"Rodrygo":{team:"Brasil",goals:1,position:"ATA"},"Endrick":{team:"Brasil",goals:1,position:"ATA"},
-"Kubo":{team:"Japao",goals:1,position:"ATA"},"Mitoma":{team:"Japao",goals:1,position:"ATA"},
-"Salah":{team:"Egito",goals:1,position:"ATA"},"Mahrez":{team:"Argelia",goals:1,position:"ATA"},
-"Diaz":{team:"Colombia",goals:1,position:"ATA"},"James":{team:"Colombia",goals:1,position:"MEI"},
-"Xhaka":{team:"Suica",goals:1,position:"MEI"},"Embolo":{team:"Suica",goals:1,position:"ATA"},
-"De Bruyne":{team:"Belgica",goals:1,position:"MEI"},"Lukaku":{team:"Belgica",goals:1,position:"ATA"},
-"Pulisic":{team:"Estados Unidos",goals:1,position:"ATA"},"Reyna":{team:"Estados Unidos",goals:1,position:"MEI"},
-"Modric":{team:"Croacia",goals:1,position:"MEI"},"Hakimi":{team:"Marrocos",goals:1,position:"LAT"},
-"En-Nesyri":{team:"Marrocos",goals:1,position:"ATA"},"Van Dijk":{team:"Holanda",goals:1,position:"ZAG"},
-"Simons":{team:"Holanda",goals:1,position:"MEI"},"Wirtz":{team:"Alemanha",goals:1,position:"MEI"},
-"Kimmich":{team:"Alemanha",goals:1,position:"MEI"},"Fernandes":{team:"Portugal",goals:1,position:"MEI"},
-"Silva":{team:"Portugal",goals:1,position:"MEI"},"Leao":{team:"Portugal",goals:1,position:"ATA"},
-"Gimenez":{team:"Mexico",goals:1,position:"ATA"},"Caicedo":{team:"Equador",goals:1,position:"VOL"},
-"Valencia":{team:"Equador",goals:1,position:"ATA"},"Haller":{team:"Costa do Marfim",goals:1,position:"ATA"},
-"Kessie":{team:"Costa do Marfim",goals:1,position:"MEI"},"Odegaard":{team:"Noruega",goals:1,position:"MEI"},
-"Sorloth":{team:"Noruega",goals:1,position:"ATA"},"Mane":{team:"Senegal",goals:1,position:"ATA"},
-"Kudus":{team:"Gana",goals:1,position:"MEI"},"Ayew":{team:"Gana",goals:1,position:"ATA"},
-"Dzeko":{team:"Bosnia",goals:1,position:"ATA"},"Almiron":{team:"Paraguai",goals:1,position:"ATA"},
-"Enciso":{team:"Paraguai",goals:1,position:"ATA"},"Kulusevski":{team:"Suecia",goals:1,position:"ATA"},
-"Gyokeres":{team:"Suecia",goals:1,position:"ATA"},"Larin":{team:"Canada",goals:1,position:"ATA"},
-"Davies":{team:"Canada",goals:1,position:"LAT"},"Balogun":{team:"Estados Unidos",goals:1,position:"ATA"},
-"Alvarez":{team:"Argentina",goals:1,position:"ATA"},"Mac Allister":{team:"Argentina",goals:1,position:"MEI"},
-"Foden":{team:"Inglaterra",goals:1,position:"ATA"},"Rice":{team:"Inglaterra",goals:1,position:"VOL"},
-"Olise":{team:"Franca",goals:1,position:"ATA"},"Zaire-Emery":{team:"Franca",goals:1,position:"MEI"},
-"Williams":{team:"Espanha",goals:1,position:"ATA"},"Olmo":{team:"Espanha",goals:1,position:"ATA"},
-"Doku":{team:"Belgica",goals:1,position:"ATA"},"Trossard":{team:"Belgica",goals:1,position:"ATA"},
-"Raphinha":{team:"Brasil",goals:1,position:"ATA"},"Marquinhos":{team:"Brasil",goals:1,position:"ZAG"},
-"Endo":{team:"Japao",goals:1,position:"VOL"},"Adingra":{team:"Costa do Marfim",goals:1,position:"ATA"},
-"Nusa":{team:"Noruega",goals:1,position:"ATA"},"Montes":{team:"Mexico",goals:1,position:"ZAG"},
-"Hincapie":{team:"Equador",goals:1,position:"ZAG"},"Paez":{team:"Equador",goals:1,position:"MEI"},
-"Wissa":{team:"RD Congo",goals:1,position:"ATA"},"Mbemba":{team:"RD Congo",goals:1,position:"ZAG"},
-"Bebe":{team:"Cabo Verde",goals:1,position:"ATA"},"Mendes":{team:"Cabo Verde",goals:1,position:"ATA"},
-"Leckie":{team:"Australia",goals:1,position:"ATA"},"Irvine":{team:"Australia",goals:1,position:"MEI"},
-"Marmoush":{team:"Egito",goals:1,position:"ATA"},"Trezequet":{team:"Egito",goals:1,position:"ATA"},
-"Akanji":{team:"Suica",goals:1,position:"ZAG"},"Rieder":{team:"Suica",goals:1,position:"MEI"},
-"Bennacer":{team:"Argelia",goals:1,position:"MEI"},"Gouiri":{team:"Argelia",goals:1,position:"ATA"},
-"Duran":{team:"Colombia",goals:1,position:"ATA"},"Rios":{team:"Colombia",goals:1,position:"MEI"},
-"Sanchez":{team:"Colombia",goals:1,position:"ZAG"},"Partey":{team:"Gana",goals:1,position:"VOL"},
-"Nuamah":{team:"Gana",goals:1,position:"ATA"},"Krunic":{team:"Bosnia",goals:1,position:"MEI"},
-"Bergvall":{team:"Suecia",goals:1,position:"MEI"},"Metcalfe":{team:"Australia",goals:1,position:"MEI"},
-"Irankunda":{team:"Australia",goals:1,position:"ATA"},"Duke":{team:"Australia",goals:1,position:"ATA"}
-};
+const TOP_SCORERS={"Messi":{team:"Argentina",goals:6,position:"ATA"},"Mbappe":{team:"Franca",goals:4,position:"ATA"},"Haaland":{team:"Noruega",goals:4,position:"ATA"},"Vini Jr":{team:"Brasil",goals:3,position:"ATA"},"Musiala":{team:"Alemanha",goals:3,position:"MEI"},"Cunha":{team:"Brasil",goals:3,position:"ATA"},"Kane":{team:"Inglaterra",goals:2,position:"ATA"},"Havertz":{team:"Alemanha",goals:2,position:"ATA"},"Oyarzabal":{team:"Espanha",goals:2,position:"ATA"},"Ronaldo":{team:"Portugal",goals:2,position:"ATA"},"Gakpo":{team:"Holanda",goals:2,position:"ATA"},"Isak":{team:"Suecia",goals:2,position:"ATA"},"David":{team:"Canada",goals:2,position:"ATA"},"Lautaro":{team:"Argentina",goals:2,position:"ATA"},"Sarr":{team:"Senegal",goals:2,position:"ATA"},"Dembele":{team:"Franca",goals:4,position:"ATA"},"Yamal":{team:"Espanha",goals:1,position:"ATA"},"Pedri":{team:"Espanha",goals:1,position:"MEI"},"Bellingham":{team:"Inglaterra",goals:1,position:"MEI"},"Saka":{team:"Inglaterra",goals:1,position:"ATA"},"Rodrygo":{team:"Brasil",goals:1,position:"ATA"},"Endrick":{team:"Brasil",goals:1,position:"ATA"},"Kubo":{team:"Japao",goals:1,position:"ATA"},"Mitoma":{team:"Japao",goals:1,position:"ATA"},"Salah":{team:"Egito",goals:1,position:"ATA"},"Mahrez":{team:"Argelia",goals:1,position:"ATA"},"Diaz":{team:"Colombia",goals:1,position:"ATA"},"James":{team:"Colombia",goals:1,position:"MEI"},"Xhaka":{team:"Suica",goals:1,position:"MEI"},"Embolo":{team:"Suica",goals:1,position:"ATA"},"De Bruyne":{team:"Belgica",goals:1,position:"MEI"},"Lukaku":{team:"Belgica",goals:1,position:"ATA"},"Pulisic":{team:"Estados Unidos",goals:1,position:"ATA"},"Reyna":{team:"Estados Unidos",goals:1,position:"MEI"},"Modric":{team:"Croacia",goals:1,position:"MEI"},"Hakimi":{team:"Marrocos",goals:1,position:"LAT"},"En-Nesyri":{team:"Marrocos",goals:1,position:"ATA"},"Van Dijk":{team:"Holanda",goals:1,position:"ZAG"},"Simons":{team:"Holanda",goals:1,position:"MEI"},"Wirtz":{team:"Alemanha",goals:1,position:"MEI"},"Kimmich":{team:"Alemanha",goals:1,position:"MEI"},"Fernandes":{team:"Portugal",goals:1,position:"MEI"},"Silva":{team:"Portugal",goals:1,position:"MEI"},"Leao":{team:"Portugal",goals:1,position:"ATA"},"Gimenez":{team:"Mexico",goals:1,position:"ATA"},"Caicedo":{team:"Equador",goals:1,position:"VOL"},"Valencia":{team:"Equador",goals:1,position:"ATA"},"Haller":{team:"Costa do Marfim",goals:1,position:"ATA"},"Kessie":{team:"Costa do Marfim",goals:1,position:"MEI"},"Odegaard":{team:"Noruega",goals:1,position:"MEI"},"Sorloth":{team:"Noruega",goals:1,position:"ATA"},"Mane":{team:"Senegal",goals:1,position:"ATA"},"Kudus":{team:"Gana",goals:1,position:"MEI"},"Ayew":{team:"Gana",goals:1,position:"ATA"},"Dzeko":{team:"Bosnia",goals:1,position:"ATA"},"Almiron":{team:"Paraguai",goals:1,position:"ATA"},"Enciso":{team:"Paraguai",goals:1,position:"ATA"},"Kulusevski":{team:"Suecia",goals:1,position:"ATA"},"Gyokeres":{team:"Suecia",goals:1,position:"ATA"},"Larin":{team:"Canada",goals:1,position:"ATA"},"Davies":{team:"Canada",goals:1,position:"LAT"},"Balogun":{team:"Estados Unidos",goals:1,position:"ATA"},"Alvarez":{team:"Argentina",goals:1,position:"ATA"},"Mac Allister":{team:"Argentina",goals:1,position:"MEI"},"Foden":{team:"Inglaterra",goals:1,position:"ATA"},"Rice":{team:"Inglaterra",goals:1,position:"VOL"},"Olise":{team:"Franca",goals:1,position:"ATA"},"Zaire-Emery":{team:"Franca",goals:1,position:"MEI"},"Williams":{team:"Espanha",goals:1,position:"ATA"},"Olmo":{team:"Espanha",goals:1,position:"ATA"},"Doku":{team:"Belgica",goals:1,position:"ATA"},"Trossard":{team:"Belgica",goals:1,position:"ATA"},"Raphinha":{team:"Brasil",goals:1,position:"ATA"},"Marquinhos":{team:"Brasil",goals:1,position:"ZAG"},"Endo":{team:"Japao",goals:1,position:"VOL"},"Adingra":{team:"Costa do Marfim",goals:1,position:"ATA"},"Nusa":{team:"Noruega",goals:1,position:"ATA"},"Montes":{team:"Mexico",goals:1,position:"ZAG"},"Hincapie":{team:"Equador",goals:1,position:"ZAG"},"Paez":{team:"Equador",goals:1,position:"MEI"},"Wissa":{team:"RD Congo",goals:1,position:"ATA"},"Mbemba":{team:"RD Congo",goals:1,position:"ZAG"},"Bebe":{team:"Cabo Verde",goals:1,position:"ATA"},"Mendes":{team:"Cabo Verde",goals:1,position:"ATA"},"Leckie":{team:"Australia",goals:1,position:"ATA"},"Irvine":{team:"Australia",goals:1,position:"MEI"},"Marmoush":{team:"Egito",goals:1,position:"ATA"},"Trezequet":{team:"Egito",goals:1,position:"ATA"},"Akanji":{team:"Suica",goals:1,position:"ZAG"},"Rieder":{team:"Suica",goals:1,position:"MEI"},"Bennacer":{team:"Argelia",goals:1,position:"MEI"},"Gouiri":{team:"Argelia",goals:1,position:"ATA"},"Duran":{team:"Colombia",goals:1,position:"ATA"},"Rios":{team:"Colombia",goals:1,position:"MEI"},"Sanchez":{team:"Colombia",goals:1,position:"ZAG"},"Partey":{team:"Gana",goals:1,position:"VOL"},"Nuamah":{team:"Gana",goals:1,position:"ATA"},"Krunic":{team:"Bosnia",goals:1,position:"MEI"},"Bergvall":{team:"Suecia",goals:1,position:"MEI"},"Metcalfe":{team:"Australia",goals:1,position:"MEI"},"Irankunda":{team:"Australia",goals:1,position:"ATA"},"Duke":{team:"Australia",goals:1,position:"ATA"}};
 
 const BRACKET_2026={
 roundOf32:[
@@ -327,12 +312,8 @@ semiFinals:[
 {id:1,match:101,date:"14/07 - 16:00",homeSlot:"W97",awaySlot:"W98"},
 {id:2,match:102,date:"15/07 - 16:00",homeSlot:"W99",awaySlot:"W100"}
 ],
-final:[
-{id:1,match:"FINAL",date:"19/07 - 16:00",homeSlot:"W101",awaySlot:"W102"}
-],
-thirdPlace:[
-{id:1,match:"3o",date:"18/07 - 18:00",homeSlot:"L101",awaySlot:"L102"}
-]
+final:[{id:1,match:"FINAL",date:"19/07 - 16:00",homeSlot:"W101",awaySlot:"W102"}],
+thirdPlace:[{id:1,match:"3o",date:"18/07 - 18:00",homeSlot:"L101",awaySlot:"L102"}]
 };
 
 let simulationState={roundOf32:{},roundOf16:{},quarterFinals:{},semiFinals:{},final:{},thirdPlace:{},isSimulated:false,champion:null,runnerUp:null,thirdPlaceTeam:null,allGoals:{},matchLogs:[]};
